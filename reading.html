@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Leituras</title>
+
+<style>
+
+:root{
+  --bg:#f4f1f7;
+  --bg-light:#faf8fc;
+  --card:#ffffff;
+  --border:#e5e0eb;
+  --border-strong:#d6cfe0;
+  --text:#2d2a32;
+  --muted:#6b6478;
+  --accent:#6c4dc0a8;
+  --accent-soft:#f2e3ff;
+  --chip:#caf5ee;
+ /* extras */
+  --success:#22c55e;
+  --success-soft:#14532d;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Segoe UI,system-ui,sans-serif;
+}
+
+header{
+  max-width:1300px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 24px;
+  background:var(--card);
+  border-radius:0;
+  border-bottom:2px solid var(--border-strong);
+  box-shadow:none;
+}
+
+header h1{
+  margin:0;
+  font-size:24px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.header-buttons{
+  display:flex;
+  gap:10px;
+}
+
+.header-buttons button{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:var(--accent);
+  border:none;
+  border-radius:8px;
+  color:white;
+  padding:8px 12px;
+  font-size:14px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.header-buttons button:hover{
+  background:color-mix(in srgb,var(--accent) 80%,black);
+  transform:translateY(-2px);
+}
+
+.grid{
+  display:grid;
+  max-width:1300px;
+  margin:16px auto;
+  grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:linear-gradient(145deg,var(--card),var(--bg-light));
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+}
+
+.top{
+  display:flex;
+  gap:14px;
+}
+
+.cover{
+  width:110px;
+  height:150px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+.meta{
+  flex:1;
+}
+
+.title{
+  font-size:15px;
+  font-weight:600;
+}
+
+.author{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.progress{
+  margin-top:14px;
+}
+
+.bar{
+  width:100%;
+  height:8px;
+  background:var(--border);
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--success));
+}
+
+.numbers{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+
+.tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.tag{
+  font-size:10px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:var(--accent-soft);
+  color:var(--text);
+}
+
+button{
+  font-size:11px;
+  padding:5px 10px;
+  border-radius:8px;
+  border:none;
+  background:linear-gradient(135deg,var(--success),#4ade80);
+  color:#022c22;
+  cursor:pointer;
+  font-weight:600;
+}
+
+button:hover{
+  filter:brightness(1.1);
+}
+
+.copied{
+  font-size:11px;
+  color:var(--success);
+  margin-left:6px;
+}
+
+@media (max-width: 600px){
+  header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px 16px;
+  }
+
+  .header-buttons{
+    width:100%;
+    flex-wrap:wrap;
+  }
+
+  .header-buttons button{
+    flex:1;
+    justify-content:center;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Leituras Atuais</h1>
+  <div class="header-buttons">
+    <button id="index">📊</button>
+    <button id="tables">📝</button>
+    <button id="authors">✍️</button>
+    <button id="flashs">📅</button>
+    <button id="reading">📚</button>
+    <button id="form">↳↰</button>
+</header>
+
+</header>
+<div id="books" class="grid"></div>
+
+<script>
+
+let books = [
+{ 
+    TITLE: "O pintassilgo", 
+    SERIES: "", 
+    AUTHOR: "Donna Tart", 
+    PAGES: 728, 
+    PROGRESS: 131,
+    RATING: 5, 
+    FAV: "YES", 
+    FORMAT: "K", 
+    LANGUAGE: "PT", 
+    TAG1: "Drama", 
+    TAG2: "Romance", 
+    TAG3: "", 
+    ISBN: "9788535924688", 
+    CAPA: "https://m.media-amazon.com/images/I/81IRoYVQiNL._SL1500_.jpg"
+},
+{ 
+    TITLE: "Santo Guerreiro: Ventos do Norte", 
+    SERIES: "Santo Guerreiro #2", 
+    AUTHOR: "Eduardo Spohr", 
+    PAGES: 588, 
+    PROGRESS: 200,
+    RATING: 5, 
+    FAV: "YES", 
+    FORMAT: "F", 
+    LANGUAGE: "PT", 
+    TAG1: "Drama", 
+    TAG2: "Ficção Histórica", 
+    TAG3: "", 
+    ISBN: "9786559241200", 
+    CAPA: "https://m.media-amazon.com/images/I/A12RGqHJmLL._SL1500_.jpg"
+},
+{ 
+    TITLE: "Odisseia", 
+    SERIES: "", 
+    AUTHOR: "Homero", 
+    PAGES: 576, 
+    PROGRESS: 250,
+    RATING: 5, 
+    FAV: "YES", 
+    FORMAT: "F", 
+    LANGUAGE: "PT", 
+    TAG1: "Mitologia", 
+    TAG2: "Clássico", 
+    TAG3: "Fantasia", 
+    ISBN: "9788563560278", 
+    CAPA: "https://m.media-amazon.com/images/I/81pk1lQC0eL._SL1500_.jpg"
+},
+{ 
+    TITLE: "Pecados da casa dos Borgia", 
+    SERIES: "", 
+    AUTHOR: "Sarah Bower", 
+    PAGES: 616, 
+    PROGRESS: 135,
+    RATING: 5, 
+    FAV: "YES", 
+    FORMAT: "K", 
+    LANGUAGE: "PT", 
+    TAG1: "Drama", 
+    TAG2: "Ficção Histórica", 
+    TAG3: "", 
+    ISBN: "9788501097248", 
+    CAPA: "https://m.media-amazon.com/images/I/61M6mXnN9rL._AC_UF1000,1000_QL80_.jpg"
+},
+];
+const container = document.getElementById("books");
+
+books.forEach(book => {
+
+    const percent = Math.floor((book.PROGRESS / book.PAGES) * 100);
+
+    const card = document.createElement("div");
+    card.className = "card";
+card.innerHTML = `
+<div class="top">
+    <img class="cover" src="${book.CAPA}">
+    <div class="meta">
+        <div class="title">${book.TITLE}</div>
+        <div class="author">${book.AUTHOR}</div>
+        <div class="author">${book.FORMAT} | ${book.LANGUAGE} </div>
+        <div class="footer">
+            <div class="tags">
+                ${tag(book.TAG1)}
+                ${tag(book.TAG2)}
+                ${tag(book.TAG3)}
+            </div>
+            <div></div>
+        </div>
+
+        <button class="finish-btn">Finalizei</button>
+        <span class="copied"></span>
+    </div>
+</div>
+
+<div class="progress">
+    <div class="bar">
+        <div class="fill" style="width:${percent}%"></div>
+    </div>
+    <div class="numbers">
+        <span>${book.PROGRESS}/${book.PAGES}</span>
+        <span>${percent}%</span>
+    </div>
+</div>
+`;
+
+    const button = card.querySelector(".finish-btn");
+    const feedback = card.querySelector(".copied");
+
+    button.onclick = () => {
+
+        const data = {
+            TITLE: book.TITLE,
+            SERIES: book.SERIES || "",
+            AUTHOR: book.AUTHOR,
+            YEAR: new Date().getFullYear(),
+            MONTH: getMonthName(),
+            PAGES: book.PAGES,
+            RATING: book.RATING,
+            FAV: book.FAV,
+            FORMAT: book.FORMAT,
+            LANGUAGE: book.LANGUAGE,
+            TAG1: book.TAG1 || "",
+            TAG2: book.TAG2 || "",
+            TAG3: book.TAG3 || "",
+            ISBN: book.ISBN || "",
+            CAPA: book.CAPA
+        };
+
+        navigator.clipboard.writeText(JSON.stringify(data));
+
+        feedback.textContent = "copiado";
+        setTimeout(()=> feedback.textContent="", 2000);
+    };
+
+    container.appendChild(card);
+});
+
+function getMonthName(){
+    const months = [
+        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+    ];
+    return months[new Date().getMonth()];
+}
+
+function tag(t){
+    if(!t) return "";
+    const c = t.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+        .replace(/\+/g,"plus")
+        .replace(/\s+/g,"-");
+
+    return `<span class="tag">${t}</span>`;
+}
+["index","flashs","tables","form","reading","authors"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
+});
+</script>
+
+</body>
+</html>

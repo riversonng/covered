@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livro > Json</title>
+<style>
+:root{
+  --bg:#f4f1f7;
+  --bg-light:#faf8fc;
+  --card:#ffffff;
+  --border:#e5e0eb;
+  --border-strong:#d6cfe0;
+  --text:#2d2a32;
+  --muted:#6b6478;
+  --accent:#6c4dc0a8;
+  --accent-soft:#f2e3ff;
+  --chip:#caf5ee;
+ /* extras */
+  --success:#22c55e;
+  --success-soft:#14532d;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Segoe UI,system-ui,sans-serif;
+}
+
+header{
+  max-width:1300px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 24px;
+  background:var(--card);
+  border-radius:0;
+  border-bottom:2px solid var(--border-strong);
+  box-shadow:none;
+}
+
+header h1{
+  margin:0;
+  font-size:24px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.header-buttons{
+  display:flex;
+  gap:10px;
+}
+
+.header-buttons button{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:var(--accent);
+  border:none;
+  border-radius:8px;
+  color:white;
+  padding:8px 12px;
+  font-size:14px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.header-buttons button:hover{
+  background:color-mix(in srgb,var(--accent) 80%,black);
+  transform:translateY(-2px);
+}
+
+/* Estilo das labels do formulário */
+label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text);
+  display: block; /* garante que o label fique acima do input/elemento */
+}
+.nav-links button {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  margin-left: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.nav-links button:hover {
+  background-color: #5c6b89; /* leve contraste */
+}
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .nav-links button {
+    margin-left: 0;
+    margin-right: 8px;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:Segoe UI,system-ui,sans-serif;}
+.container{max-width:700px;margin:20px auto;padding:16px;}
+h1{text-align:center;color:var(--accent);margin-bottom:16px;}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.form .full{grid-column:1/-1;}
+input, select{padding:6px 8px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fafafa;outline:none;}
+input:focus, select:focus{border-color:var(--accent);box-shadow:0 0 4px rgba(108,77,192,0.3);}
+.button-group{display:flex;gap:6px;margin-top:8px;}
+.button-group button{flex:1;padding:6px;border:none;border-radius:6px;font-weight:600;color:#fff;cursor:pointer;font-size:13px;}
+.btn-generate{background:var(--accent);}
+.btn-generate:hover{background:var(--accent-light);}
+.btn-copy{background:#3a54c7;}
+.btn-copy:hover{background:#21327e;}
+.option-group{display:flex;flex-wrap:wrap;gap:4px;}
+.option-group button{padding:4px 6px;font-size:11px;border-radius:6px;border:1px solid #ddd;background:#fafafa;cursor:pointer;}
+.option-group button.selected{background:var(--accent);color:#fff;border-color:var(--accent);}
+.star-rating{display:flex;gap:2px;font-size:20px;cursor:pointer;}
+.star-rating span{color:#ccc;position:relative;display:inline-block;}
+.star-rating span.full{color:var(--star-color);}
+.star-rating span.half::before{content:'★';position:absolute;left:0;width:50%;overflow:hidden;color:var(--star-color);}
+#jsonOutput{margin-top:10px;font-size:11px;max-height:150px;overflow:auto;background:#fafafa;padding:6px;border-radius:6px;}
+@media(max-width:768px){.form{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Conversor</h1>
+
+  <div class="header-buttons">
+    <button id="index">📊</button>
+    <button id="tables">📝</button>
+    <button id="authors">✍️</button>
+    <button id="flashs">📅</button>
+    <button id="reading">📚</button>
+    <button id="form">↳↰</button>
+</header>
+
+</header>
+<div class="container">
+  <div class="form">
+    <input class="full" placeholder="Título" id="title">
+    <input placeholder="Autor" id="author">
+    <input placeholder="Série" id="series">
+    <input type="number" placeholder="Páginas" id="pages">
+    <input type="number" placeholder="Progresso" id="progress">
+    <input placeholder="ISBN" id="isbn" class="full">
+
+    <div class="full"><label>Ano:</label><div id="yearOptions" class="option-group"></div></div>
+    <div class="full"><label>Mês:</label><div id="monthOptions" class="option-group"></div></div>
+    <div class="full"><label>Formato:</label><div id="formatOptions" class="option-group"></div></div>
+    <div class="full"><label>Idioma:</label><div id="languageOptions" class="option-group"></div></div>
+    <div class="full"><label>Avaliação:</label><div id="ratingOptions" class="star-rating"></div></div>
+
+    <select id="tag1" class="full"></select>
+    <select id="tag2" class="full"></select>
+    <select id="tag3" class="full"></select>
+
+    <div class="button-group full">
+      <button class="btn-generate" onclick="generateJSON()">Gerar JSON</button>
+      <button class="btn-copy" onclick="copyJSON()">Copiar JSON</button>
+    </div>
+  </div>
+
+  <pre id="jsonOutput"></pre>
+</div>
+
+<script>
+// Gêneros
+const genres=["Romance","Drama","Fantasia","Mistério","Suspense","Terror","SciFi","Distopia","Histórico","Biografia","Não Ficção","Graphic Novel","Mangá","Ficção de Cura","Crime","Guerra","de Época","Clássico","Aventura","Contemporâneo","NSFW","Thriller","Gore","LGBTQ+","Juvenil","Sociais","Ficção Histórica","Mitologia","Monster","Sátira","Política","Não ficção","Faroeste","Poesia","História"];
+const uniqueGenres=[...new Set(genres)].sort((a,b)=>a.localeCompare(b,'pt'));
+['tag1','tag2','tag3'].forEach(id=>{
+  const sel=document.getElementById(id);
+  const emptyOpt=document.createElement('option');
+  emptyOpt.value=""; emptyOpt.text="Selecione";
+  sel.add(emptyOpt);
+  uniqueGenres.forEach(g=>{
+    const opt=document.createElement('option'); opt.value=g; opt.text=g; sel.add(opt);
+  })
+});
+
+// Opções ano, mês, formato, idioma
+function createOptions(containerId,optionsArray,defaultValue){
+  const container=document.getElementById(containerId);
+  optionsArray.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.textContent=opt;
+    btn.addEventListener('click',()=>{Array.from(container.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected')});
+    if(opt===defaultValue) btn.classList.add('selected');
+    container.appendChild(btn);
+  });
+}
+const yearArray=[];for(let y=2024;y<=new Date().getFullYear();y++)yearArray.push(y); createOptions('yearOptions',yearArray)
+const months=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]; createOptions('monthOptions',months)
+createOptions('formatOptions',["K","F"],"K")
+createOptions('languageOptions',["PT","IN"],"PT")
+
+// Stars e coração
+const ratingContainer = document.getElementById('ratingOptions'); ratingContainer.dataset.value = 0;
+for(let i=1;i<=5;i++){
+  const star = document.createElement('span'); star.innerHTML="★"; star.dataset.value=i;
+  star.addEventListener('mousemove', e=>{
+    const rect=star.getBoundingClientRect();
+    const percent=(e.clientX-rect.left)/rect.width;
+    Array.from(ratingContainer.children).forEach(s=>s.classList.remove('full','half'));
+    Array.from(ratingContainer.children).forEach((s,j)=>{
+      if(j<i-1) s.classList.add('full'); else if(j===i-1) s.classList.add(percent<0.5?'half':'full');
+    });
+  });
+  star.addEventListener('click', e=>{
+    const rect=star.getBoundingClientRect();
+    const percent=(e.clientX-rect.left)/rect.width;
+    ratingContainer.dataset.value=(i-1)+(percent<0.5?0.5:1);
+    Array.from(ratingContainer.children).forEach(s=>s.classList.remove('full','half'));
+    Array.from(ratingContainer.children).forEach((s,j)=>{
+      if(j<i-1) s.classList.add('full'); else if(j===i-1) s.classList.add(percent<0.5?'half':'full');
+    });
+  });
+  star.addEventListener('mouseout', ()=>{
+    const value=parseFloat(ratingContainer.dataset.value||0);
+    Array.from(ratingContainer.children).forEach(s=>s.classList.remove('full','half'));
+    Array.from(ratingContainer.children).forEach((s,j)=>{
+      if(j<Math.floor(value)) s.classList.add('full');
+      else if(j===Math.floor(value)&&value%1!==0) s.classList.add('half');
+    });
+  });
+  ratingContainer.appendChild(star);
+}
+const favHeart=document.createElement('span'); favHeart.innerHTML="♥"; favHeart.style.cursor='pointer'; favHeart.style.fontSize='20px'; favHeart.style.marginLeft='6px'; favHeart.style.color='#ccc';
+ratingContainer.appendChild(favHeart);
+favHeart.addEventListener('click',()=>{
+  if(favHeart.dataset.selected==="yes"){favHeart.dataset.selected="no"; favHeart.style.color="#ccc";}
+  else{favHeart.dataset.selected="yes"; favHeart.style.color="red";}
+});
+
+// JSON
+function generateJSON(){
+  const pages=Number(document.getElementById('pages').value);
+  const progress=Number(document.getElementById('progress').value||0);
+  const bookObj={
+    TITLE: document.getElementById('title').value,
+    SERIES: document.getElementById('series').value,
+    AUTHOR: document.getElementById('author').value,
+    PAGES: pages,
+    PROGRESS: progress,
+    YEAR: Number(document.querySelector('#yearOptions button.selected')?.textContent||0),
+    MONTH: document.querySelector('#monthOptions button.selected')?.textContent||"",
+    RATING: Number(ratingContainer.dataset.value||0),
+    FAV: favHeart.dataset.selected==="yes"?"YES":"NO",
+    FORMAT: document.querySelector('#formatOptions button.selected')?.textContent||"",
+    LANGUAGE: document.querySelector('#languageOptions button.selected')?.textContent||"",
+    TAG1: document.getElementById('tag1').value,
+    TAG2: document.getElementById('tag2').value,
+    TAG3: document.getElementById('tag3').value,
+    ISBN: document.getElementById('isbn').value,
+    CAPA:""
+  };
+  document.getElementById('jsonOutput').textContent=`,`+JSON.stringify(bookObj,null,4);
+}
+
+function copyJSON(){
+  const jsonText=document.getElementById('jsonOutput').textContent;
+  if(!jsonText) return;
+  navigator.clipboard.writeText(jsonText).then(()=>{alert('JSON copiado!')});
+}
+["index","flashs","tables","form","reading","authors"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
+});
+</script>
+</body>
+</html>

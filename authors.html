@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Autores - Estatísticas</title>
+  <style>
+  
+  :root {
+  --background:#f4f1f7;
+  --bg-light:#faf8fc;
+  --card:#ffffff;
+  --border:#e5e0eb;
+  --border-strong:#d6cfe0;
+  --text:#2d2a32;
+  --muted:#6b6478;
+  --accent:#6c4dc0a8;
+  --accent-soft:#f2e3ff;
+  --chip:#caf5ee;
+  --hover: #f0f0f0;
+  --scrollbar: #caf5ee;
+}
+    /* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+ background: var(--background);
+  color: var(--text);
+}
+
+header{
+  max-width:1300px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 24px;
+  background:var(--card);
+  border-radius:0;
+  border-bottom:2px solid var(--border-strong);
+  box-shadow:none;
+}
+
+header h1{
+  margin:0;
+  font-size:24px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.header-buttons{
+  display:flex;
+  gap:10px;
+}
+
+.header-buttons button{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:var(--accent);
+  border:none;
+  border-radius:8px;
+  color:white;
+  padding:8px 12px;
+  font-size:14px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.header-buttons button:hover{
+  background:color-mix(in srgb,var(--accent) 80%,black);
+  transform:translateY(-2px);
+}
+
+
+/* LAYOUT */
+.container {
+  display: grid;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* BOTÃO HOME */
+.home-btn {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #111;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.home-btn:hover {
+  background: #333;
+}
+
+/* SELECT CUSTOM */
+.sidebar select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sidebar select:hover {
+  border-color: #bbb;
+}
+
+.sidebar select:focus {
+  outline: none;
+  border-color: #111;
+}
+
+/* LISTA */
+.sidebar ul {
+  list-style: none;
+  overflow-y: auto;
+}
+
+.sidebar li {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #444;
+  transition: 0.15s;
+}
+
+.sidebar li:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* TITULOS DE GRUPO */
+.sidebar li:first-child,
+.sidebar li.section-title {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--accent);
+  cursor: default;
+  margin-top: 10px;
+}
+
+/* Container principal */
+.container {
+  display: flex;
+  height: 100vh; /* ocupa a altura total da tela */
+}
+
+/* Container do ranking geral */
+.rankings-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Container dos rankings por gênero */
+.genre-rankings-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* Cada card de gênero */
+.genre-rankings-container .card,
+.rankings-container .card {
+  flex: 0 0 250px;
+  max-width: 500px;
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* Sidebar fixa */
+.sidebar {
+  width: 250px;
+  color: var(--accent);
+  padding: 20px;
+  overflow-y: auto; /* rolagem independente */
+  height: 100vh; /* garante que sempre ocupe a tela inteira */
+  position: sticky;
+  top: 0;
+}
+
+/* Conteúdo centralizado com rolagem */
+.content {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto; /* rolagem independente */
+  height: 100vh; /* ocupa altura total da tela */
+  display: flex;
+  justify-content: center; /* centraliza horizontal */
+  box-sizing: border-box;
+}
+
+/* limitar largura dos cards */
+.card {
+  width: 1000px;
+  margin: 0 auto 25px auto; /* centraliza horizontal + espaçamento inferior */
+}
+
+/* CARD */
+.card {
+  background: var(--card);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 20px;
+  max-width: 900px;
+}
+
+.card h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
+/* DESCRIÇÃO */
+.desc {
+  font-size: 12px;
+  color: var(--accent-dark);
+  margin-bottom: 15px;
+}
+
+/* STATS */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.stats div {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid #eee;
+  text-align: center;
+}
+
+.stats strong {
+  font-size: 11px;
+  color: var(--accent);
+  display: block;
+}
+
+.stats span {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* GÊNEROS */
+.genres {
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.covers {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+}
+
+.cover-item {
+  position: relative;
+  border-radius: 10px;
+  transition: transform 0.25s;
+  z-index: 1;
+}
+
+.cover-item:hover {
+  transform: scale(1.4);
+  z-index: 10;
+}
+.cover-item img {
+  width: 100%;
+  display: block;
+border-radius: 10px;
+  transition: transform 0.25s ease;
+}
+
+/* overlay */
+.cover-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px;
+  font-size: 12px;
+  text-align: center;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+
+  opacity: 0;
+  transform: translateY(100%);
+  transition: 0.25s;
+}
+
+/* mostrar info */
+.cover-item:hover .cover-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Apenas para os rankings */
+.rank-item .heart {
+  color: #ff5fa2;
+}
+
+.rank-item .star {
+  color: #fcc31a;
+}
+/* RANKING */
+.ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid #eee;
+  font-size: 14px;
+}
+
+.rank-item span {
+  font-weight: 600;
+  font-size: 12px;
+  color: #888;
+}
+
+.rank-item strong {
+  flex: 1;
+}
+
+.rank-item small {
+  font-size: 12px;
+  color: #666;
+}
+
+/* HOVER SUAVE */
+.rank-item:hover {
+  background: #f0f0f0;
+}
+
+/* SCROLL bonito */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+  </style>
+</head>
+<body>
+<header>
+  <h1>Readingpedia</h1>
+  <div class="header-buttons">
+    <button id="homeBtn">🏠</button>
+    <button id="index">📊</button>
+    <button id="tables">📝</button>
+    <button id="authors">✍️</button>
+    <button id="flashs">📅</button>
+    <button id="reading">📚</button>
+    <button id="form">↳↰</button>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Autores</h2>
+    <ul id="authorList"></ul>
+  </aside>
+
+  <!-- Conteúdo -->
+  <main class="content">
+    <div id="authorInfo">
+      <h2>Selecione um autor</h2>
+      <p>As informações aparecerão aqui.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+
+// Carregar JSON
+fetch("books.json")
+  .then(response => response.json())
+  .then(data => init(data))
+  .catch(error => console.error("Erro ao carregar JSON:", error));
+
+let authorsData = {};
+let currentSort = "az";
+
+function init(books) {
+  // Agrupar autores
+  books.forEach(book => {
+    if (!authorsData[book.AUTHOR]) {
+      authorsData[book.AUTHOR] = [];
+    }
+    authorsData[book.AUTHOR].push(book);
+  });
+
+  createSortSelector();
+  renderAuthors();
+}
+
+// Remover createHomeButton() e usar botões do header
+document.getElementById("homeBtn").addEventListener("click", () => {
+  currentView = "home";
+  renderHome();
+});
+
+const coresTag1 = {
+  "Romance": "#e44356",
+  "NSFW": "#740e17",
+  "LGBTQ+": "#ad1457",
+  "Drama": "#da853f",
+
+  "Fantasia": "#5b4db2",
+  "Terror": "#6b3fa0",
+  "Mitologia": "#8e44ad",
+  "Monster": "#5e35b1",
+  "Thriller": "#4a3fb3",
+  "Gore": "#3e0757",
+
+  "Mistério": "#3f51b5",
+  "SciFi": "#0b9eac",
+  "Distopia": "#455a64",
+  "Política": "#3949ab",
+  "Física": "#0277bd",
+
+  "Não Ficção": "#2e7d32",
+  "Ficção de Cura": "#00796b",
+  "Juvenil": "#43a047",
+  "Sociais": "#689f38",
+  "Psicologia": "#2e7d32",
+
+  "Aventura": "#f57c00",
+  "Suspense": "#ef6c00",
+  "Crime": "#558b2f",
+  "Faroeste": "#e65100",
+  "Guerra": "#d84315",
+
+  "Histórico": "#6d4c41",
+  "Ficção Histórica": "#5d4037",
+  "História": "#6d4c41",
+  "Clássico": "#546e7a",
+  "De Época": "#bf360c",
+
+  "Poesia": "#8e24aa",
+  "Contemporâneo": "#b23a48",
+  "Sátira": "#f9a825",
+  "Contos": "#ff8f00",
+
+  "Mangá": "#d81b60",
+  "Graphic Novel": "#5e35b1",
+
+  "Biografia": "#f9a825",
+  "Filosofia": "#512da8",
+  "De Formação": "#00695c"
+};
+
+// ====== ESTADO ======
+let currentView = "home";
+
+function renderHome() {
+  const container = document.getElementById("authorInfo");
+
+  // Ranking geral
+  const ranking = getRanking();
+  const topScore = ranking.slice(0, 10);
+  const topFav = [...ranking].sort((a,b)=>b.favs - a.favs).slice(0,10);
+  const topBooks = [...ranking].sort((a,b)=>b.count - a.count).slice(0,10);
+
+  // Ranking por gênero
+  const genreMap = {};
+  Object.keys(authorsData).forEach(author => {
+    authorsData[author].forEach(b => {
+      if (b.TAG1) {
+        if (!genreMap[b.TAG1]) genreMap[b.TAG1] = {};
+        if (!genreMap[b.TAG1][author]) genreMap[b.TAG1][author] = [];
+        genreMap[b.TAG1][author].push(b);
+      }
+    });
+  });
+
+  let genreHtml = '<div class="genre-rankings-container">';
+  Object.keys(genreMap).forEach(genre => {
+  const authors = genreMap[genre];
+  const ranking = Object.keys(authors)
+    .map(author => {
+      const books = authors[author];
+      const totalBooks = books.length;
+      const avg = books.reduce((s,b)=>s+(b.RATING||0),0)/totalBooks;
+      const favs = books.filter(b=>b.FAV==="YES").length;
+      const score = avg + favs*0.5;
+      return {name:author, avg, count:totalBooks, favs, score};
+    })
+    .sort((a,b)=>b.score - a.score || b.avg - a.avg || b.count - a.count)
+    .slice(0,10);
+
+  const cor = coresTag1[genre] || "#ccc"; // cor padrão se não estiver no objeto
+
+  genreHtml += `
+    <div class="card" style="border-top: 5px solid ${cor};">
+      <h2 style="color:${cor}">🏷️ ${genre}</h2>
+      <div class="ranking">
+        ${renderRankingList(ranking)}
+      </div>
+    </div>
+  `;
+});
+  genreHtml += '</div>';
+
+  container.innerHTML = `
+    <div class="rankings-container">
+      <div class="card">
+        <h2>🏆 Ranking Geral</h2>
+        <p class="desc">
+          Classificação baseada em <strong>nota média</strong> + bônus por 
+          <strong>favoritos ❤︎</strong>.<br>
+          <small>(Score = média + 0.5 por favorito)</small>
+        </p>
+        <div class="ranking">
+          ${renderRankingList(topScore)}
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>❤︎ Autores Favoritos</h2>
+        <p class="desc">Ranking por quantidade de livros favoritados.</p>
+        <div class="ranking">
+          ${renderRankingList(topFav,"fav")}
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📚 Mais Lidos</h2>
+        <p class="desc">Autores com maior quantidade de livros lidos.</p>
+        <div class="ranking">
+          ${renderRankingList(topBooks,"books")}
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:30px;text-align:center;">🏷️ Ranking por Gênero</h2>
+    ${genreHtml}
+  `;
+}
+function renderRankingList(list, type = "score") {
+  return list.map((a, i) => {
+    let extra = "";
+
+if (type === "fav") {
+  extra = `<span class="heart">❤︎ ${a.favs}</span>`;
+} else if (type === "books") {
+  extra = `📚 ${a.count}`;
+} else {
+  extra = `<span class="star">★ ${a.avg.toFixed(2)}</span> | <span class="heart">❤︎ ${a.favs}</span>`;
+}
+
+    return `
+      <div class="rank-item">
+        <span>#${i + 1}</span>
+        <strong>${a.name}</strong>
+        <small>${extra}</small>
+      </div>
+    `;
+  }).join("");
+}
+
+function getRanking() {
+  return Object.keys(authorsData)
+    .map(author => {
+      const books = authorsData[author];
+
+      const totalBooks = books.length;
+
+      const avg =
+        books.reduce((s, b) => s + (b.RATING || 0), 0) / totalBooks;
+
+      const favCount =
+        books.filter(b => b.FAV === "YES").length;
+
+      // Score final (peso maior na nota, bônus por favoritos)
+      const score = avg + (favCount * 0.5);
+
+      return {
+        name: author,
+        avg: avg,
+        count: totalBooks,
+        favs: favCount,
+        score: score
+      };
+    })
+    .sort((a, b) => {
+      // Ordenação principal: score
+      if (b.score !== a.score) return b.score - a.score;
+
+      // Desempate: média
+      if (b.avg !== a.avg) return b.avg - a.avg;
+
+      // Desempate final: quantidade de livros
+      return b.count - a.count;
+    });
+}
+
+// Criar seletor de ordenação
+function createSortSelector() {
+  const sidebar = document.querySelector(".sidebar");
+
+  const select = document.createElement("select");
+  select.innerHTML = `
+    <option value="az">A → Z</option>
+    <option value="za">Z → A</option>
+    <option value="rating_desc">Nota (maior → menor)</option>
+    <option value="rating_asc">Nota (menor → maior)</option>
+    <option value="books_desc">Qtd livros (maior → menor)</option>
+    <option value="books_asc">Qtd livros (menor → maior)</option>
+  `;
+
+  select.addEventListener("change", (e) => {
+    currentSort = e.target.value;
+    renderAuthors();
+  });
+
+  sidebar.insertBefore(select, sidebar.querySelector("ul"));
+}
+
+// Ordenação
+function sortAuthors(list) {
+  return list.sort((a, b) => {
+    const booksA = authorsData[a];
+    const booksB = authorsData[b];
+
+    const avgA = booksA.reduce((s, b) => s + b.RATING, 0) / booksA.length;
+    const avgB = booksB.reduce((s, b) => s + b.RATING, 0) / booksB.length;
+
+    switch (currentSort) {
+      case "az": return a.localeCompare(b);
+      case "za": return b.localeCompare(a);
+      case "rating_desc": return avgB - avgA;
+      case "rating_asc": return avgA - avgB;
+      case "books_desc": return booksB.length - booksA.length;
+      case "books_asc": return booksA.length - booksB.length;
+    }
+  });
+}
+
+// Renderizar autores
+function renderAuthors() {
+  const authorList = document.getElementById("authorList");
+  authorList.innerHTML = "";
+
+  const allAuthors = Object.keys(authorsData);
+
+  // Separar grupos
+  const featured = allAuthors.filter(a => authorsData[a].length > 2);
+  const others = allAuthors.filter(a => authorsData[a].length <= 2);
+
+  const sortedFeatured = sortAuthors(featured);
+  const sortedOthers = sortAuthors(others);
+
+  // Criar seção
+  function createSection(title, authors) {
+    if (authors.length === 0) return;
+
+    const titleEl = document.createElement("li");
+    titleEl.textContent = title;
+    titleEl.style.fontWeight = "bold";
+    titleEl.style.marginTop = "10px";
+    titleEl.classList.add("section-title");
+    authorList.appendChild(titleEl);
+
+    authors.forEach(author => {
+      const li = document.createElement("li");
+      li.textContent = `${author} (${authorsData[author].length})`;
+
+      li.addEventListener("click", () => showAuthor(author));
+
+      authorList.appendChild(li);
+    });
+  }
+
+  createSection("🔥 Destaque", sortedFeatured);
+  createSection("📚 Outros autores", sortedOthers);
+}
+
+function showAuthor(author) {
+  const books = authorsData[author];
+
+  const totalBooks = books.length;
+  const totalPages = books.reduce((sum, b) => sum + (b.PAGES || 0), 0);
+  const avgPages = (totalPages / totalBooks).toFixed(1);
+
+  const totalRating = books.reduce((sum, b) => sum + (b.RATING || 0), 0);
+  const avgRating = (totalRating / totalBooks).toFixed(2);
+
+  const maxRating = Math.max(...books.map(b => b.RATING || 0));
+  const minRating = Math.min(...books.map(b => b.RATING || 0));
+
+  // Gêneros únicos
+  const genres = new Set();
+  books.forEach(b => {
+    [b.TAG1, b.TAG2, b.TAG3].forEach(tag => {
+      if (tag) genres.add(tag);
+    });
+  });
+
+  // Criar badges de gênero coloridos
+  const genreBadges = [...genres].map(g => {
+    const cor = coresTag1[g] || "#ccc";
+    return `<span style="color:white; background:${cor}; padding: 4px; border-radius:6px; margin-right:4px; font-size:12px;">${g}</span>`;
+  }).join(" ");
+
+  // Livros favoritos
+  const favs = books.filter(b => b.FAV === "YES").length;
+
+  // HTML das capas
+  const covers = books.map(b => `
+    <div class="cover-item">
+      <img src="${b.CAPA}" alt="${b.TITLE}">
+      <div class="cover-info">
+        ★ ${b.RATING} ${b.FAV === "YES" ? "❤︎" : ""}
+      </div>
+    </div>
+  `).join("");
+
+  const content = `
+    <div class="card" style="border-top: 5px solid ${coresTag1[[...genres][0]] || '#888'}">
+      <h2 style="color:${coresTag1[[...genres][0]] || '#333'}">${author}</h2>
+
+      <div class="stats">
+        <div><strong>📚 Livros</strong><span>${totalBooks}</span></div>
+        <div><strong>★ Média</strong><span>${avgRating}</span></div>
+        <div><strong>🏆 Melhor nota</strong><span>${maxRating}</span></div>
+        <div><strong>📉 Pior nota</strong><span>${minRating}</span></div>
+        <div><strong>📄 Páginas (total)</strong><span>${totalPages}</span></div>
+        <div><strong>📊 Média páginas</strong><span>${avgPages}</span></div>
+        <div><strong>❤︎ Favoritos</strong><span>${favs}</span></div>
+      </div>
+
+      <p class="genres"><strong>🏷️ Gêneros:</strong> ${genreBadges}</p>
+
+      <div class="covers">
+        ${covers}
+      </div>
+    </div>
+  `;
+
+  document.getElementById("authorInfo").innerHTML = content;
+}
+["index","flashs","tables","form","reading","authors"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
+});
+
+</script>
+</body>
+</html>

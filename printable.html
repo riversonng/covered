@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Leituras</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+
+/* centraliza toda a página */
+
+body{
+    font-family: "Times", serif;
+    background:#ffffff;
+    color:#222;
+    margin:20px;
+    display:flex;
+    justify-content:center;
+}
+
+/* largura do conteúdo */
+
+#content{
+    max-width:900px;
+    width:100%;
+}
+
+/* livros em grid de até 3 colunas */
+
+.books{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:5px;
+    margin-top:5px;
+    justify-items:center;
+}
+
+/* card do livro */
+
+.book{
+    width:150px;
+    text-align:center;
+}
+/* ano */
+
+.year{
+    margin-bottom:50px;
+}
+
+.year h1{
+    font-size:36px;
+    border-bottom:3px solid #ddd;
+    padding-bottom:5px;
+}
+
+/* mês */
+
+.month{
+    margin-top:30px;
+    padding:20px;
+    border:1px solid #e5e5e5;
+    border-radius:8px;
+    background:#fafafa;
+}
+
+.month-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.month-header h2{
+    font-size:22px;
+    font-weight:normal;
+    letter-spacing:1px;
+}
+
+
+/* capa */
+
+.book img{
+    width:150px;
+    height:230px;
+    object-fit:cover;
+    border-radius:4px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* texto */
+
+.meta{
+    font-size:18px;
+    margin-top:6px;
+    color:#555;
+}
+
+/* estrelas */
+
+.rating{
+    font-size:25px;
+    margin-top:3px;
+    margin-bottom:3px;
+    color:#ffca2b;
+}
+
+/* botão salvar (não aparece na imagem se quiser ocultar depois) */
+
+button{
+    background:#ffffff;
+    border:1px solid #ccc;
+    border-radius:6px;
+    padding:6px 10px;
+    font-size:12px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#f2f2f2;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="content"></div>
+
+<script>
+function stars(n){
+    let full = Math.floor(n)
+    let half = (n % 1) !== 0
+    let s = "★".repeat(full)
+    if(half) s += "½"
+    return s
+}
+
+fetch("books.json")
+.then(r=>r.json())
+.then(data=>{
+
+    const grouped = {}
+
+    data.forEach(b=>{
+
+        if(!grouped[b.YEAR]) grouped[b.YEAR] = {}
+        if(!grouped[b.YEAR][b.MONTH]) grouped[b.YEAR][b.MONTH] = []
+
+        grouped[b.YEAR][b.MONTH].push(b)
+
+    })
+
+    const container = document.getElementById("content")
+
+    Object.keys(grouped).sort().forEach(year=>{
+
+        const yearDiv=document.createElement("div")
+        yearDiv.className="year"
+
+        const ytitle=document.createElement("h1")
+        ytitle.innerText=year
+        yearDiv.appendChild(ytitle)
+
+        Object.keys(grouped[year]).forEach(month=>{
+
+            const books = grouped[year][month]
+
+            /* divide em blocos de 16 */
+
+            for(let i=0;i<books.length;i+=16){
+
+                const pageBooks = books.slice(i,i+16)
+                const page = Math.floor(i/16)+1
+
+                const monthDiv=document.createElement("div")
+                monthDiv.className="month"
+
+                const id=`${year}-${month}-${page}`
+                monthDiv.id=id
+
+                const header=document.createElement("div")
+                header.className="month-header"
+
+                header.innerHTML=`
+                <h2>${month}${books.length>16 ? " ("+page+")":""}</h2>
+                <button onclick="saveImage('${id}')">Salvar imagem</button>
+                `
+
+                monthDiv.appendChild(header)
+
+                const booksDiv=document.createElement("div")
+                booksDiv.className="books"
+
+                pageBooks.forEach(book=>{
+
+                    const capa = book["CAPA"] || book["CAPA "]
+
+                    const div=document.createElement("div")
+                    div.className="book"
+
+                    div.innerHTML=`
+                    <img src="${capa}" crossorigin="anonymous">
+                    <div class="meta">
+                    ${book.PAGES} pgs | ${book.FORMAT} | ${book.LANGUAGE}
+                    </div>
+                    <div class="rating">${stars(book.RATING)}</div>
+                    `
+
+                    booksDiv.appendChild(div)
+
+                })
+
+                monthDiv.appendChild(booksDiv)
+                yearDiv.appendChild(monthDiv)
+
+            }
+
+        })
+
+        container.appendChild(yearDiv)
+
+    })
+
+})
+
+
+function saveImage(id){
+
+    const el=document.getElementById(id)
+
+    html2canvas(el,{
+        useCORS:true,
+        scale:3,
+        backgroundColor:"#ffffff"
+    }).then(canvas=>{
+
+        const link=document.createElement("a")
+        link.download=id+".png"
+        link.href=canvas.toDataURL("image/png")
+        link.click()
+
+    })
+
+}
+</script>
+
+</body>
+</html>
