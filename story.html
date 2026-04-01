@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Story de Leituras</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+
+/* ================= RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ================= BASE ================= */
+:root {
+    --bg: #121212;
+    --text: #eaeaea;
+    --accent: #888;
+    --border: transparent;
+    --font-title: 'Inter', sans-serif;
+}
+
+/* 🌑 DARK (baixo contraste, confortável) */
+.theme-dark {
+    --bg: #181818;
+    --text: #d1d5db;
+    --accent: #9ca3af;
+    --border: #2a2a2a;
+}
+
+/* gradiente suave */
+.theme-dark #story-canvas {
+    background: linear-gradient(180deg, #1f1f1f, #141414);
+}
+
+/* ☀️ LIGHT (estilo SKOOB) */
+.theme-light {
+    --bg: #f0f6ff;
+    --text: #1e293b;
+    --accent: #2c88d9;
+    --border: #cfe3ff;
+}
+
+/* gradiente leve azul */
+.theme-light #story-canvas {
+    background: linear-gradient(180deg, #ffffff, #e7f1ff);
+}
+
+/* ☕ COFFEE (cozy com profundidade) */
+.theme-coffee {
+    --bg: #2b1d16;
+    --text: #f5e6d3;
+    --accent: #c69c6d;
+    --border: #5a3e2b;
+}
+
+/* gradiente quente */
+.theme-coffee #story-canvas {
+    background: linear-gradient(180deg, #2b1d16, #1a120d);
+}
+
+/* 🎧 SPOTIFY (gradiente oficial feel) */
+.theme-spotify {
+    --bg: #121212;
+    --text: #ffffff;
+    --accent: #611db9;
+    --border: #1f1f1f;
+}
+
+/* gradiente estilo Spotify */
+.theme-spotify #story-canvas {
+    background: linear-gradient(180deg, #7b1db9 0%, #191414 60%);
+}
+
+/* ================= LAYOUT ================= */
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* CONTROLES */
+.controls {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* STORY */
+#story-canvas {
+    width: 360px;
+    height: 640px;
+    background: var(--bg);
+    color: var(--text);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    border: 4px solid var(--border);
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-family: var(--font-title);
+    font-size: 28px;
+}
+
+.header span {
+    color: var(--accent);
+    font-size: 14px;
+}
+
+/* GRID */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.book {
+    position: relative;
+}
+
+.book img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+.badge {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+     backdrop-filter: blur(4px);
+    background: rgba(0,0,0,0.6);
+     color: #ffd700; /* dourado */
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 12px;
+}
+
+/* coração dentro do badge */
+.badge .fav {
+    font-size: 10px;
+    opacity: 0.9;
+ color: rgb(202, 1, 102);
+}
+
+/* FOOTER */
+.stats {
+    margin-top: auto;
+    text-align: center;
+    border-top: 1px solid var(--accent);
+    padding-top: 10px;
+}
+
+/* BOTÕES */
+button, select {
+    margin: 3px;
+    padding: 6px;
+}
+
+</style>
+</head>
+
+<body class="theme-dark">
+
+<div class="controls">
+    <select id="selectYear"></select>
+    <select id="selectMonth"></select>
+
+    <select id="selectTheme" onchange="changeTheme()">
+<option value="theme-dark">Dark 🌑</option>
+<option value="theme-light">Light ☀️</option>
+<option value="theme-coffee">Coffee ☕</option>
+<option value="theme-spotify">Spotify 🎧</option>
+    </select>
+
+    <button onclick="updateStory()">Atualizar</button>
+    <button onclick="downloadImage()">Salvar</button>
+</div>
+
+<div id="story-canvas">
+    <div class="header">
+        <h1 id="displayMonth"></h1>
+        <span id="displayYear"></span>
+    </div>
+
+    <div id="booksGrid" class="books-grid"></div>
+
+    <div id="statsArea" class="stats"></div>
+</div>
+
+<script>
+
+/* ================= DATA ================= */
+let allBooks = [];
+let currentFiltered = [];
+
+/* ================= INIT ================= */
+async function init() {
+    const res = await fetch('books.json');
+    allBooks = await res.json();
+
+    const years = [...new Set(allBooks.map(b => b.YEAR))];
+    const months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+    years.forEach(y => selectYear.innerHTML += `<option>${y}</option>`);
+    months.forEach(m => selectMonth.innerHTML += `<option>${m}</option>`);
+
+    selectYear.value = years[0];
+    selectMonth.value = months[new Date().getMonth()];
+
+    updateStory();
+}
+
+/* ================= THEME ================= */
+function changeTheme() {
+    document.body.className = selectTheme.value;
+}
+
+function getStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 !== 0;
+
+    let stars = '★'.repeat(full);
+
+    if (half) stars += '☆';
+
+    return stars;
+}
+/* ================= UPDATE ================= */
+function updateStory() {
+    const year = parseInt(selectYear.value);
+    const month = selectMonth.value;
+
+    displayMonth.innerText = month;
+    displayYear.innerText = year;
+
+    currentFiltered = allBooks.filter(b => b.YEAR === year && b.MONTH === month);
+
+    renderBooks(currentFiltered.slice(0,9));
+}
+
+/* ================= STATS ================= */
+function getMonthStats() {
+    let total = 0;
+    currentFiltered.forEach(b => total += b.PAGES);
+    return total;
+}
+
+/* ================= RENDER ================= */
+function renderBooks(list) {
+    booksGrid.innerHTML = '';
+
+    list.forEach(book => {
+        booksGrid.innerHTML += `
+        <div class="book">
+            <img src="${book.CAPA}" crossorigin="anonymous">
+          
+<div class="badge">
+    <span>${getStars(book.RATING)}</span>
+    ${book.FAV === 'YES' ? '<span class="fav">❤︎</span>' : ''}
+</div>
+
+            </div>`;
+    });
+
+    statsArea.innerHTML = `
+        <b>${currentFiltered.length}</b> livros • 
+        <b>${getMonthStats()}</b> páginas
+    `;
+}
+
+/* ================= EXPORT ================= */
+async function downloadImage() {
+
+    const chunkSize = 12;
+    const chunks = [];
+
+    for (let i = 0; i < currentFiltered.length; i += chunkSize) {
+        chunks.push(currentFiltered.slice(i, i + chunkSize));
+    }
+
+    for (let i = 0; i < chunks.length; i++) {
+
+        renderBooks(chunks[i]);
+
+        await new Promise(r => setTimeout(r, 200));
+
+        const canvas = await html2canvas(document.getElementById('story-canvas'), {
+            useCORS: true,
+            scale: 3
+        });
+
+        const link = document.createElement('a');
+        link.download = `story_${i+1}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    renderBooks(currentFiltered.slice(0,9));
+}
+
+/* ================= START ================= */
+init();
+
+</script>
+
+</body>
+</html>
+```
