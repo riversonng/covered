@@ -942,7 +942,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   document.body.className = localStorage.getItem("selectedTheme") || "theme-dark";
 });
 
-["index","flashs","tables","form","story"].forEach(id=>{
+["index","flashs","tables","story"].forEach(id=>{
   document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
 });
 
