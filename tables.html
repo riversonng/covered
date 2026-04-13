@@ -300,10 +300,8 @@ td {
   <div class="header-buttons">
     <button id="index">📊</button>
     <button id="tables">📝</button>
-    <button id="authors">✍️</button>
     <button id="flashs">📅</button>
-    <button id="reading">📚</button>
-    <button id="form">↳↰</button>
+    <button id="story">👁️‍🗨️</button>
 </header>
 <div class="tabs" id="tabsContainer"></div>
 <div id="containerAnos"></div>
@@ -582,7 +580,7 @@ if(primeiraTab && primeiroConteudo){
 
 });
 
-["index","flashs","tables","form","reading","authors"].forEach(id=>{
+["index","flashs","tables","story"].forEach(id=>{
   document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
 });
 
