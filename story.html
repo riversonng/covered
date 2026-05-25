@@ -3,100 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Story de Leituras</title>
+<title>Story de Leituras - Editorial</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
-/* ================= RESET ================= */
+/* ================= RESET & DESIGN SYSTEM ================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ================= BASE (APENAS COFFEE) ================= */
-:root {
-    --bg: #2b1d16;
-    --text: #f5e6d3;
-    --accent: #c69c6d;
-    --border: #5a3e2b;
-    --font-title: 'Inter', sans-serif;
+/* 🎨 PALETAS RE-MAPEADAS (Coffee, Velvet, Antique) */
+
+.theme-coffee { 
+    --bg-dark: #120c08; 
+    --bg-card: #231610; 
+    --text-light: #f5e6d3; 
+    --accent: #c69c6d; 
+    --accent-muted: #4e3629; }
+
+/* Tema Velvet (Velvet Merlot / Biblioteca & Vinho) */
+.theme-velvet {
+    --bg-dark: #160a0c;
+    --bg-card: #2e0c12;
+    --text-light: #fbeff0;
+    --accent: #e5989b;
+    --accent-muted: #31161a;
+}
+
+/* Tema Antique (Antique Parchment / Papel Envelhecido & Nanquim) */
+.theme-antique {
+    --bg-dark: #ded7c3;
+    --bg-card: #f4efe2;
+    --text-light: #2c251e;
+    --accent: #6b5b47;
+    --accent-muted: #c4ba9f;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background: #121212; /* Fundo externo escuro */
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 30px 20px;
+    transition: background 0.3s ease;
 }
 
-/* ================= CONTROLES ================= */
+/* ================= CONTROLES MODERNOS ================= */
 .controls {
-    background: #3d2b1f;
-    padding: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 12px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-muted);
 }
 
 select, button {
-    padding: 8px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 8px 14px;
     border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 14px;
+    border: 1px solid var(--accent-muted);
+    background: var(--bg-dark);
+    color: var(--text-light);
+    font-size: 13px;
     cursor: pointer;
-    outline: none;
+    transition: all 0.2s ease;
 }
 
-button:hover {
+select:focus, button:hover {
+    border-color: var(--accent);
     background: var(--accent);
-    color: #2b1d16;
+    color: var(--bg-dark);
 }
 
-
-/* STORY CANVAS (Visual Original Restaurado) */
+/* ================= STORY CANVAS (EDITORIAL) ================= */
 #story-canvas {
     width: 360px;
     height: 640px;
-    background: linear-gradient(180deg, #2b1d16, #1a120d);
-    color: var(--text);
-    padding: 25px;
+    background: var(--bg-card);
+    color: var(--text-light);
+    padding: 35px 25px 25px 25px;
     display: flex;
     flex-direction: column;
-    border: 4px solid var(--border);
+    justify-content: space-between;
+    position: relative;
+    transition: all 0.3s ease;
+    
+    outline: 1px solid var(--accent);
+    outline-offset: -12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
 }
 
-/* HEADER ORIGINAL */
+/* CABEÇALHO ESTILO REVISTA */
 .header {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.header h1 {
-    font-family: var(--font-title);
-    font-size: 28px;
-}
-
-.header span {
+.header .sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
     color: var(--accent);
-    font-size: 14px;
+    display: block;
+    margin-bottom: 4px;
 }
 
-/* GRID ORIGINAL (4 colunas) */
+.header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    line-height: 1.1;
+}
+
+.header .year-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 300;
+    border-top: 1px solid var(--accent-muted);
+    border-bottom: 1px solid var(--accent-muted);
+    padding: 2px 15px;
+    margin-top: 8px;
+    letter-spacing: 2px;
+}
+
+/* GRID DE 4 COLUNAS MANTIDO */
 .books-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 10px 8px;
+    margin-bottom: auto;
+    padding: 10px 0;
 }
 
 .book {
@@ -107,65 +155,101 @@ button:hover {
     width: 100%;
     aspect-ratio: 2/3;
     object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border-radius: 2px;
 }
 
+/* BADGES MINIMALISTAS */
 .badge {
     position: absolute;
-    bottom: -6px;
+    bottom: -5px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 4px;
-    backdrop-filter: blur(4px);
-    background: rgba(0,0,0,0.6);
-    color: #ffd700;
-    font-size: 10px;
-    padding: 3px 6px;
-    border-radius: 12px;
+    gap: 2px;
+    background: var(--bg-dark);
+    color: var(--accent);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 4px;
+    border: 0.5px solid var(--accent);
+    white-space: nowrap;
 }
 
 .badge .fav {
-    font-size: 10px;
-    opacity: 0.9;
-    color: rgb(202, 1, 102);
+    color: #e94343;
+    font-size: 9px;
 }
 
-/* FOOTER ORIGINAL */
-.stats {
-    margin-top: auto;
+/* PAINEL DE ESTATÍSTICAS (SUTIL E CONCISO) */
+.stats-panel {
+    border-top: 1px dashed var(--accent);
+    padding-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat-box {
     text-align: center;
-    border-top: 1px solid var(--accent);
-    padding-top: 10px;
 }
 
-/* BOTÕES */
-button, select {
-    margin: 3px;
-    padding: 6px;
+.stat-val {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: var(--text-light);
+    font-weight: bold;
+}
+
+.stat-lbl {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-top: 2px;
 }
 </style>
 </head>
 
-<body>
+<body class="theme-coffee">
 
 <div class="controls">
     <select id="selectYear" onchange="updateStory()"></select>
     <select id="selectMonth" onchange="updateStory()"></select>
+    
+    <!-- Seletor atualizado apenas com os temas requisitados -->
+    <select id="selectTheme" onchange="changeTheme()">
+        <option value="theme-coffee">Coffee</option>
+        <option value="theme-velvet">Velvet</option>
+        <option value="theme-antique">Antique</option>
+    </select>
+
     <button onclick="updateStory()">Atualizar</button>
-    <button onclick="downloadImage()">Salvar</button>
-    <button onclick="downloadYear()">Salvar Ano</button>
+    <button onclick="downloadImage()">Salvar Capa</button>
+    <button onclick="downloadYear()">Exportar Ano</button>
 </div>
 
 <div id="story-canvas">
     <div class="header">
+        <span class="sub">Leituras do mês</span>
         <h1 id="displayMonth"></h1>
-        <span id="displayYear"></span>
+        <div class="year-badge" id="displayYear"></div>
     </div>
 
     <div id="booksGrid" class="books-grid"></div>
 
-    <div id="statsArea" class="stats"></div>
+    <div id="statsPanel" class="stats-panel">
+        <div class="stat-box">
+            <div class="stat-val" id="statBooks">0</div>
+            <div class="stat-lbl">Livros Lidos</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val" id="statPages">0</div>
+            <div class="stat-lbl">Páginas Lidas</div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -177,13 +261,11 @@ async function init() {
     const res = await fetch('books.json');
     allBooks = await res.json();
 
-    // Pega os anos e ordena (mais recente primeiro)
     const years = [...new Set(allBooks.map(b => b.YEAR))].sort((a, b) => b - a);
     
     years.forEach(y => selectYear.innerHTML += `<option value="${y}">${y}</option>`);
     monthsNames.forEach(m => selectMonth.innerHTML += `<option value="${m}">${m}</option>`);
 
-    // Abre no item mais recente do JSON
     if (allBooks.length > 0) {
         const lastEntry = allBooks[allBooks.length - 1];
         selectYear.value = lastEntry.YEAR;
@@ -193,11 +275,15 @@ async function init() {
     updateStory();
 }
 
+function changeTheme() {
+    document.body.className = document.getElementById('selectTheme').value;
+}
+
 function getStars(rating) {
     const full = Math.floor(rating);
     const half = rating % 1 !== 0;
     let stars = '★'.repeat(full);
-    if (half) stars += '☆';
+    if (half) stars += '½';
     return stars;
 }
 
@@ -210,41 +296,35 @@ function updateStory() {
 
     currentFiltered = allBooks.filter(b => b.YEAR === year && b.MONTH === month);
 
-    // Mantém a renderização original (mostrando os primeiros 12 no story padrão)
     renderBooks(currentFiltered.slice(0, 12));
-}
-
-function getMonthStats() {
-    let total = 0;
-    currentFiltered.forEach(b => total += b.PAGES);
-    return total;
 }
 
 function renderBooks(list) {
     booksGrid.innerHTML = '';
+    let totalPages = 0;
 
     list.forEach(book => {
+        totalPages += book.PAGES;
+
         booksGrid.innerHTML += `
         <div class="book">
             <img src="${book.CAPA}" crossorigin="anonymous">
             <div class="badge">
                 <span>${getStars(book.RATING)}</span>
-                ${book.FAV === 'YES' ? '<span class="fav">❤︎</span>' : ''}
+                ${book.FAV === 'YES' ? '<span class="fav">❤</span>' : ''}
             </div>
         </div>`;
     });
 
-    statsArea.innerHTML = `
-        <b>${currentFiltered.length}</b> livros • 
-        <b>${getMonthStats()}</b> páginas
-    `;
+    document.getElementById('statBooks').innerText = currentFiltered.length;
+    document.getElementById('statPages').innerText = totalPages.toLocaleString('pt-BR');
 }
 
 async function downloadImage() {
     const chunkSize = 12;
     for (let i = 0; i < currentFiltered.length; i += chunkSize) {
         renderBooks(currentFiltered.slice(i, i + chunkSize));
-        await new Promise(r => setTimeout(r, 200));
+        await new Promise(r => setTimeout(r, 250));
 
         const canvas = await html2canvas(document.getElementById('story-canvas'), {
             useCORS: true,
@@ -252,11 +332,11 @@ async function downloadImage() {
         });
 
         const link = document.createElement('a');
-        link.download = `story_${selectMonth.value}_${i/chunkSize + 1}.png`;
+        link.download = `story_${selectMonth.value}_p${i/chunkSize + 1}.png`;
         link.href = canvas.toDataURL();
         link.click();
     }
-    updateStory(); // Volta ao normal
+    updateStory();
 }
 
 async function downloadYear() {
