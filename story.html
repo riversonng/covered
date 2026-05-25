@@ -228,7 +228,7 @@ async function init() {
     years.forEach(y => selectYear.innerHTML += `<option>${y}</option>`);
     months.forEach(m => selectMonth.innerHTML += `<option>${m}</option>`);
 
-    selectYear.value = years[0];
+    selectYear.value = years[new Date().getYear()];
     selectMonth.value = months[new Date().getMonth()];
 
     updateStory();
