@@ -9,7 +9,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
-
 /* ================= RESET ================= */
 * {
     margin: 0;
@@ -17,90 +16,59 @@
     box-sizing: border-box;
 }
 
-/* ================= BASE ================= */
+/* ================= BASE (APENAS COFFEE) ================= */
 :root {
-    --bg: #121212;
-    --text: #eaeaea;
-    --accent: #888;
-    --border: transparent;
-    --font-title: 'Inter', sans-serif;
-}
-
-/* 🌑 DARK (baixo contraste, confortável) */
-.theme-dark {
-    --bg: #181818;
-    --text: #d1d5db;
-    --accent: #9ca3af;
-    --border: #2a2a2a;
-}
-
-/* gradiente suave */
-.theme-dark #story-canvas {
-    background: linear-gradient(180deg, #1f1f1f, #141414);
-}
-
-/* ☀️ LIGHT (estilo SKOOB) */
-.theme-light {
-    --bg: #f0f6ff;
-    --text: #1e293b;
-    --accent: #2c88d9;
-    --border: #cfe3ff;
-}
-
-/* gradiente leve azul */
-.theme-light #story-canvas {
-    background: linear-gradient(180deg, #ffffff, #e7f1ff);
-}
-
-/* ☕ COFFEE (cozy com profundidade) */
-.theme-coffee {
     --bg: #2b1d16;
     --text: #f5e6d3;
     --accent: #c69c6d;
     --border: #5a3e2b;
+    --font-title: 'Inter', sans-serif;
 }
 
-/* gradiente quente */
-.theme-coffee #story-canvas {
-    background: linear-gradient(180deg, #2b1d16, #1a120d);
-}
-
-/* 🎧 SPOTIFY (gradiente oficial feel) */
-.theme-spotify {
-    --bg: #121212;
-    --text: #ffffff;
-    --accent: #611db9;
-    --border: #1f1f1f;
-}
-
-/* gradiente estilo Spotify */
-.theme-spotify #story-canvas {
-    background: linear-gradient(180deg, #7b1db9 0%, #191414 60%);
-}
-
-/* ================= LAYOUT ================= */
 body {
     font-family: 'Inter', sans-serif;
-    background: var(--bg);
+    background: #121212; /* Fundo externo escuro */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
 }
 
-/* CONTROLES */
+/* ================= CONTROLES ================= */
 .controls {
-    background: #fff;
-    padding: 10px;
-    border-radius: 10px;
+    background: #3d2b1f;
+    padding: 15px;
+    border-radius: 12px;
     margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-/* STORY */
+select, button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+button:hover {
+    background: var(--accent);
+    color: #2b1d16;
+}
+
+
+/* STORY CANVAS (Visual Original Restaurado) */
 #story-canvas {
     width: 360px;
     height: 640px;
-    background: var(--bg);
+    background: linear-gradient(180deg, #2b1d16, #1a120d);
     color: var(--text);
     padding: 25px;
     display: flex;
@@ -108,7 +76,7 @@ body {
     border: 4px solid var(--border);
 }
 
-/* HEADER */
+/* HEADER ORIGINAL */
 .header {
     text-align: center;
     margin-bottom: 20px;
@@ -124,7 +92,7 @@ body {
     font-size: 14px;
 }
 
-/* GRID */
+/* GRID ORIGINAL (4 colunas) */
 .books-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -146,27 +114,24 @@ body {
     bottom: -6px;
     left: 50%;
     transform: translateX(-50%);
-    
     display: flex;
     align-items: center;
     gap: 4px;
-
-     backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     background: rgba(0,0,0,0.6);
-     color: #ffd700; /* dourado */
+    color: #ffd700;
     font-size: 10px;
     padding: 3px 6px;
     border-radius: 12px;
 }
 
-/* coração dentro do badge */
 .badge .fav {
     font-size: 10px;
     opacity: 0.9;
- color: rgb(202, 1, 102);
+    color: rgb(202, 1, 102);
 }
 
-/* FOOTER */
+/* FOOTER ORIGINAL */
 .stats {
     margin-top: auto;
     text-align: center;
@@ -179,25 +144,17 @@ button, select {
     margin: 3px;
     padding: 6px;
 }
-
 </style>
 </head>
 
-<body class="theme-dark">
+<body>
 
 <div class="controls">
-    <select id="selectYear"></select>
-    <select id="selectMonth"></select>
-
-    <select id="selectTheme" onchange="changeTheme()">
-<option value="theme-dark">Dark 🌑</option>
-<option value="theme-light">Light ☀️</option>
-<option value="theme-coffee">Coffee ☕</option>
-<option value="theme-spotify">Spotify 🎧</option>
-    </select>
-
+    <select id="selectYear" onchange="updateStory()"></select>
+    <select id="selectMonth" onchange="updateStory()"></select>
     <button onclick="updateStory()">Atualizar</button>
     <button onclick="downloadImage()">Salvar</button>
+    <button onclick="downloadYear()">Salvar Ano</button>
 </div>
 
 <div id="story-canvas">
@@ -212,44 +169,38 @@ button, select {
 </div>
 
 <script>
-
-/* ================= DATA ================= */
 let allBooks = [];
 let currentFiltered = [];
+const monthsNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
-/* ================= INIT ================= */
 async function init() {
     const res = await fetch('books.json');
     allBooks = await res.json();
 
-    const years = [...new Set(allBooks.map(b => b.YEAR))];
-    const months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+    // Pega os anos e ordena (mais recente primeiro)
+    const years = [...new Set(allBooks.map(b => b.YEAR))].sort((a, b) => b - a);
+    
+    years.forEach(y => selectYear.innerHTML += `<option value="${y}">${y}</option>`);
+    monthsNames.forEach(m => selectMonth.innerHTML += `<option value="${m}">${m}</option>`);
 
-    years.forEach(y => selectYear.innerHTML += `<option>${y}</option>`);
-    months.forEach(m => selectMonth.innerHTML += `<option>${m}</option>`);
-
-    selectYear.value = years[new Date().getYear()];
-    selectMonth.value = months[new Date().getMonth()];
+    // Abre no item mais recente do JSON
+    if (allBooks.length > 0) {
+        const lastEntry = allBooks[allBooks.length - 1];
+        selectYear.value = lastEntry.YEAR;
+        selectMonth.value = lastEntry.MONTH;
+    }
 
     updateStory();
-}
-
-/* ================= THEME ================= */
-function changeTheme() {
-    document.body.className = selectTheme.value;
 }
 
 function getStars(rating) {
     const full = Math.floor(rating);
     const half = rating % 1 !== 0;
-
     let stars = '★'.repeat(full);
-
     if (half) stars += '☆';
-
     return stars;
 }
-/* ================= UPDATE ================= */
+
 function updateStory() {
     const year = parseInt(selectYear.value);
     const month = selectMonth.value;
@@ -259,17 +210,16 @@ function updateStory() {
 
     currentFiltered = allBooks.filter(b => b.YEAR === year && b.MONTH === month);
 
-    renderBooks(currentFiltered.slice(0,9));
+    // Mantém a renderização original (mostrando os primeiros 12 no story padrão)
+    renderBooks(currentFiltered.slice(0, 12));
 }
 
-/* ================= STATS ================= */
 function getMonthStats() {
     let total = 0;
     currentFiltered.forEach(b => total += b.PAGES);
     return total;
 }
 
-/* ================= RENDER ================= */
 function renderBooks(list) {
     booksGrid.innerHTML = '';
 
@@ -277,13 +227,11 @@ function renderBooks(list) {
         booksGrid.innerHTML += `
         <div class="book">
             <img src="${book.CAPA}" crossorigin="anonymous">
-          
-<div class="badge">
-    <span>${getStars(book.RATING)}</span>
-    ${book.FAV === 'YES' ? '<span class="fav">❤︎</span>' : ''}
-</div>
-
-            </div>`;
+            <div class="badge">
+                <span>${getStars(book.RATING)}</span>
+                ${book.FAV === 'YES' ? '<span class="fav">❤︎</span>' : ''}
+            </div>
+        </div>`;
     });
 
     statsArea.innerHTML = `
@@ -292,20 +240,10 @@ function renderBooks(list) {
     `;
 }
 
-/* ================= EXPORT ================= */
 async function downloadImage() {
-
     const chunkSize = 12;
-    const chunks = [];
-
     for (let i = 0; i < currentFiltered.length; i += chunkSize) {
-        chunks.push(currentFiltered.slice(i, i + chunkSize));
-    }
-
-    for (let i = 0; i < chunks.length; i++) {
-
-        renderBooks(chunks[i]);
-
+        renderBooks(currentFiltered.slice(i, i + chunkSize));
         await new Promise(r => setTimeout(r, 200));
 
         const canvas = await html2canvas(document.getElementById('story-canvas'), {
@@ -314,19 +252,38 @@ async function downloadImage() {
         });
 
         const link = document.createElement('a');
-        link.download = `story_${i+1}.png`;
+        link.download = `story_${selectMonth.value}_${i/chunkSize + 1}.png`;
         link.href = canvas.toDataURL();
         link.click();
     }
-
-    renderBooks(currentFiltered.slice(0,9));
+    updateStory(); // Volta ao normal
 }
 
-/* ================= START ================= */
-init();
+async function downloadYear() {
+    const year = parseInt(selectYear.value);
+    for (let m of monthsNames) {
+        const hasBooks = allBooks.some(b => b.YEAR === year && b.MONTH === m);
+        if(!hasBooks) continue;
 
+        selectMonth.value = m;
+        updateStory();
+        await new Promise(r => setTimeout(r, 300));
+
+        const canvas = await html2canvas(document.getElementById('story-canvas'), {
+            useCORS: true,
+            scale: 3
+        });
+
+        const link = document.createElement('a');
+        link.download = `story_${year}_${m}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+    updateStory();
+}
+
+init();
 </script>
 
 </body>
 </html>
-```
