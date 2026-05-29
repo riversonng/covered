@@ -146,6 +146,11 @@ header h1 span { color: var(--skoob-blue); }
 <header>
   <div class="nav-container">
     <h1>Reading<span>pedia</span></h1>
+    <div class="btn-group">
+    <button class="btn-filter active id="index">📋</button>
+    <button class="btn-filter active id="tables">📅</button>
+    <button class="btn-filter active id="flashs">📖</button>
+    <button class="btn-filter active id="metrics">🌼</button>
     <select id="themeSelector" class="palette-selector">
       <option value="default">🔮</option>
       <option value="pastel-rainbow">🌈</option>
@@ -541,6 +546,10 @@ document.getElementById("clear").addEventListener("click", () => {
   selectBtnFilter('fav', '');
   state.tag = ''; // Limpa a tag ativa interna
   applyFilters();
+});
+
+["index","flashs","tables","form", "metrics"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
 });
 
 document.getElementById("prevPage").addEventListener("click", () => { if(state.currentPage > 1) { state.currentPage--; render(); } });
