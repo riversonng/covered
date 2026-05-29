@@ -412,6 +412,7 @@ small{font-size:13px;color:var(--muted)}
     <button id="index">📊</button>
     <button id="tables">📝</button>
     <button id="flashs">📅</button>
+    <button id="metrics">🌼</button>
     <button id="story">👁️‍🗨️</button>
 </header>
 
@@ -760,7 +761,7 @@ document.getElementById("resetBtn").onclick = () => {
 };
 
 
-["index","flashs","tables","story"].forEach(id=>{
+["index","flashs","tables","story","metrics"].forEach(id=>{
   document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
 });
 
