@@ -617,10 +617,9 @@ document.getElementById("clear").addEventListener("click", () => {
   applyFilters();
 });
 
-["index","flashs","tables","form","reading", "authors"].forEach(id=>{
+["index","flashs","tables","story","metrics"].forEach(id=>{
   document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
 });
-
 
 document.getElementById("prevPage").addEventListener("click", () => { if(state.currentPage > 1) { state.currentPage--; render(); } });
 document.getElementById("nextPage").addEventListener("click", () => { if(state.currentPage < Math.ceil(state.filtered.length/state.itemsPerPage)) { state.currentPage++; render(); } });
