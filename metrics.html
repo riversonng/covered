@@ -7,43 +7,58 @@
 <style>
 /* --- CONFIGURAÇÃO DE PALETAS (TEMAS) --- */
 :root {
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --text: #1e293b;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
-  --skoob-blue: #6366f1;
+  --bg: #e0dcf8;         /* Lavanda pastel de fundo */
+  --card: #ffffff;       
+  --text: #3b2a57;       /* Roxo ametista escuro para leitura */
+  --text-muted: #23c1c7; /* Tons pastéis secundários */
+  --border: #e7dd83;     
+  --skoob-blue: #ff7597; /* Rosa chiclete pastel para botões */
+  --btn-text: #ffffff;
   --radius: 8px;
 }
 
-/* 🌈 pastel-rainbow */
+/* 📜 Tema Claro 2: Light Dark Academia */
+[data-theme="light-dark-academia"] {
+  --bg: #f4eae1;         /* Papel antigo / Bege pergaminho claro */
+  --card: #fcf8f2;       /* Marfim suave */
+  --text: #2b1f1d;       /* Marrom sépia escuro (tinta nanquim) */
+  --text-muted: #7c6a5e; /* Camurça fosco */
+  --border: #dfcfbe;     /* Bordas de papel envelhecido */
+  --skoob-blue: #5c4033; /* Marrom café/couro para botões */
+  --btn-text: #fdfaf7;
+}
+
+/* 📚 Tema Escuro 1: Dark Academia */
+[data-theme="dark-academia"] {
+  --bg: #1a1412;         /* Marrom quase preto / Madeira escura */
+  --card: #281e1b;       /* Marrom couro profundo */
+  --text: #f4ede4;       /* Papel antigo / Marfim claro */
+  --text-muted: #a89481; /* Sépia / Camurça */
+  --border: #3d302b;     /* Bordas sutis de madeira */
+  --skoob-blue: #8c6239; /* Ouro velho / Bronze para botões */
+  --btn-text: #f4ede4;
+}
+
+/* 🍷 Tema Escuro 2: Veludo (Velvet Night) */
+[data-theme="veludo"] {
+  --bg: #0f050c;         /* Vinho/Roxo extremamente escuro */
+  --card: #1f0d1a;       /* Veludo ameixa profundo */
+  --text: #fbebf5;       /* Seda clara com toque rosado */
+  --text-muted: #b38da9; /* Malva fosco */
+  --border: #381630;     /* Bordas de vinho fundido */
+  --skoob-blue: #d12b6f; /* Vermelho carmim/veludo vibrante para botões */
+  --btn-text: #ffffff;
+}
+
+/* 🌈 Tema Pastel Colorido (Pastel Rainbow) */
 [data-theme="pastel-rainbow"] {
-  --bg: #fffaf5;
-  --card: #ffffff;
-  --text: #4c2964;
-  --text-muted: #2e98a7;
-  --border: #fde68a;
-  --skoob-blue: #fb7185;
-}
-
-/* 🌸 rosa */
-[data-theme="rosa"] {
-  --bg: #fff1f2;
-  --card: #ffffff;
-  --text: #4c1d2b;
-  --text-muted: #be5873;
-  --border: #fecdd3;
-  --skoob-blue: #f472b6;
-}
-
-/* 🌿 verde */
-[data-theme="verde"] {
-  --bg: #f4fbf6;
-  --card: #ffffff;
-  --text: #163a2b;
-  --text-muted: #18bda1;
-  --border: #ccebd7;
-  --skoob-blue: #21b18d;
+--bg: #0b0f19;         /* Azul espacial extremamente escuro */
+  --card: #161c2e;       /* Cartões em azul meia-noite profundo */
+  --text: #00ffcc;       /* Texto principal em verde neon/ciano elétrico */
+  --text-muted: #6f80a5; /* Azul acinzenzado para informações secundárias */
+  --border: #222f4d;     /* Bordas tecnológicas discretas */
+  --skoob-blue: #ff007f; /* Rosa choque/Neon para botões de ação e destaque */
+  --btn-text: #ffffff;
 }
 
 body {
@@ -57,6 +72,39 @@ header { background: var(--card); border-bottom: 1px solid var(--border); paddin
 header h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
 header h1 span { color: var(--skoob-blue); }
 .palette-selector { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; }
+
+/* --- BOTÕES DO HEADER (Adicione este bloco) --- */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaçamento entre os botões */
+}
+
+.header-buttons button {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px; /* Ajuste o tamanho do emoji se precisar */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Efeito de passar o mouse nos botões */
+.header-buttons button:hover {
+  border-color: var(--skoob-blue);
+  background: var(--card);
+  transform: translateY(-1px); /* Um leve efeito de flutuar */
+}
+
+/* Efeito de clique */
+.header-buttons button:active {
+  transform: translateY(0);
+}
 
 /* --- GRID TRIPLICE (FILTROS | CONTEÚDO | GRÁFICOS) --- */
 .main-wrapper { max-width: 1440px; margin: 15px auto; display: grid; grid-template-columns: 240px 1fr 280px; gap: 15px; padding: 0 15px; }
@@ -85,6 +133,26 @@ header h1 span { color: var(--skoob-blue); }
 }
 .btn-filter:hover { border-color: var(--skoob-blue); }
 .btn-filter.active { background: var(--skoob-blue); color: #fff; border-color: var(--skoob-blue); }
+/* --- ESTILIZAÇÃO DOS BOTÕES --- */
+.btn-primary {
+  background-color: var(--skoob-blue);
+  color: var(--btn-text);
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  /* Escurece ou clareia levemente o botão no hover de forma automática */
+  filter: brightness(0.9);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
 
 .clear-btn { width: 100%; padding: 8px; background: transparent; border: 1px dashed var(--border); color: var(--text-muted); font-weight: 600; border-radius: 6px; cursor: pointer; font-size: 12px; margin-top: 10px; }
 .clear-btn:hover { border-color: var(--skoob-blue); color: var(--skoob-blue); }
@@ -146,17 +214,18 @@ header h1 span { color: var(--skoob-blue); }
 <header>
   <div class="nav-container">
     <h1>Reading<span>pedia</span></h1>
-    <div class="btn-group">
-    <button class="btn-filter active id="index">📋</button>
-    <button class="btn-filter active id="tables">📅</button>
-    <button class="btn-filter active id="flashs">📖</button>
-    <button class="btn-filter active id="metrics">🌼</button>
-    <select id="themeSelector" class="palette-selector">
-      <option value="default">🔮</option>
-      <option value="pastel-rainbow">🌈</option>
-      <option value="rosa">🌸</option>
-      <option value="verde">🌿</option>
-    </select>
+  <div class="header-buttons">
+    <button id="index">📋</button>
+    <button id="tables">📅</button>
+    <button id="flashs">📖</button>
+    <button id="metrics">🌼</button>
+<select id="themeSelector" class="palette-selector">
+  <option value="default">🌊</option>
+  <option value="light-dark-academia">📚</option>
+  <option value="dark-academia">📜</option>
+  <option value="veludo">🍷</option>
+  <option value="pastel-rainbow">🌈</option>
+</select>
   </div>
 </header>
 
@@ -548,9 +617,10 @@ document.getElementById("clear").addEventListener("click", () => {
   applyFilters();
 });
 
-["index","flashs","tables","form", "metrics"].forEach(id=>{
+["index","flashs","tables","form","reading", "authors"].forEach(id=>{
   document.getElementById(id)?.addEventListener("click",()=> location.href = id+".html");
 });
+
 
 document.getElementById("prevPage").addEventListener("click", () => { if(state.currentPage > 1) { state.currentPage--; render(); } });
 document.getElementById("nextPage").addEventListener("click", () => { if(state.currentPage < Math.ceil(state.filtered.length/state.itemsPerPage)) { state.currentPage++; render(); } });
